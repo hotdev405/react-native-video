@@ -37,7 +37,7 @@ public class DataSourceUtil {
 
     public static String getUserAgent(ReactContext context) {
         if (userAgent == null) {
-            userAgent = Util.getUserAgent(context, "VLC player");
+            userAgent = Util.getUserAgent(context, "123");
         }
         return userAgent;
     }
@@ -86,10 +86,10 @@ public class DataSourceUtil {
         CookieJarContainer container = (CookieJarContainer) client.cookieJar();
         ForwardingCookieHandler handler = new ForwardingCookieHandler(context);
         container.setCookieJar(new JavaNetCookieJar(handler));
-        String useragent = "VLC Player";
+        String useragent = "";
         if (requestHeaders != null && !requestHeaders.isEmpty()) {
             for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
-                if (entry.getKey().toLowerCase().equals("useragent") && !TextUtils.isEmpty(entry.getValue())) {
+                if (entry.getKey().toLowerCase().equals("user-agent") && !TextUtils.isEmpty(entry.getValue())) {
                     useragent = entry.getValue();
                 }
             }
