@@ -86,7 +86,15 @@ public class DataSourceUtil {
         CookieJarContainer container = (CookieJarContainer) client.cookieJar();
         ForwardingCookieHandler handler = new ForwardingCookieHandler(context);
         container.setCookieJar(new JavaNetCookieJar(handler));
-        OkHttpDataSourceFactory okHttpDataSourceFactory = new OkHttpDataSourceFactory(client, getUserAgent(context), bandwidthMeter);
+        String useragent = "VLC Player";
+        if (requestHeaders != null && !requestHeaders.isEmpty()) {
+            for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
+                if (entry.getKey().toLowerCase().equals("useragent") && !TextUtils.isEmpty(entry.getValue())) {
+                    useragent = entry.getValue();
+                }
+            }
+        }
+        OkHttpDataSourceFactory okHttpDataSourceFactory = new OkHttpDataSourceFactory(client, useragent, bandwidthMeter);
 
         if (requestHeaders != null)
             okHttpDataSourceFactory.getDefaultRequestProperties().set(requestHeaders);
