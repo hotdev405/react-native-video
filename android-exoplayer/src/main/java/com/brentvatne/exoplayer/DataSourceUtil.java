@@ -37,7 +37,7 @@ public class DataSourceUtil {
 
     public static String getUserAgent(ReactContext context) {
         if (userAgent == null) {
-            userAgent = Util.getUserAgent(context, "ReactNativeVideo");
+            userAgent = Util.getUserAgent(context, "VLC player");
         }
         return userAgent;
     }
@@ -55,9 +55,11 @@ public class DataSourceUtil {
     
     public static DataSource.Factory getDefaultDataSourceFactory(ReactContext context, DefaultBandwidthMeter bandwidthMeter, Map<String, String> requestHeaders) {
         if (defaultDataSourceFactory == null || (requestHeaders != null && !requestHeaders.isEmpty())) {
-            for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
-                if (entry.getKey().toLowerCase().equals("useragent") && !TextUtils.isEmpty(entry.getValue())) {
-                    setUserAgent(entry.getValue());
+            if (requestHeaders != null && !requestHeaders.isEmpty()) {
+                for (Map.Entry<String, String> entry : requestHeaders.entrySet()) {
+                    if (entry.getKey().toLowerCase().equals("useragent") && !TextUtils.isEmpty(entry.getValue())) {
+                        setUserAgent(entry.getValue());
+                    }
                 }
             }
             
