@@ -71,17 +71,17 @@ public class DataSourceUtil {
         return new DefaultDataSourceFactory(context, bandwidthMeter,
                 buildHttpDataSourceFactory(context, bandwidthMeter, requestHeaders));
     }
-
-    private static HttpDataSource.Factory buildHttpDataSourceFactory(ReactContext context, DefaultBandwidthMeter bandwidthMeter, Map<String, String> requestHeaders) {
-        OkHttpClient client = OkHttpClientProvider.getOkHttpClient();
-        CookieJarContainer container = (CookieJarContainer) client.cookieJar();
-        ForwardingCookieHandler handler = new ForwardingCookieHandler(context);
-        container.setCookieJar(new JavaNetCookieJar(handler));
-        OkHttpDataSourceFactory okHttpDataSourceFactory = new OkHttpDataSourceFactory(client, getUserAgent(context), bandwidthMeter);
-
-        if (requestHeaders != null)
-            okHttpDataSourceFactory.getDefaultRequestProperties().set(requestHeaders);
-
-        return okHttpDataSourceFactory;
+    
+    public static DataSource.Factory getDefaultDataSourceFactory(ReactContext context, DefaultBandwidthMeter bandwidthMeter, Map<String, String> requestHeaders) {
+        if (defaultDataSourceFactory == null || (requestHeaders != null && !requestHeaders.isEmpty())) {
+            for (Entry<String, String> entry : map.entrySet()) {
+                if (entry.getKey().toLowerCase() == USERAGENT_HEADER && !TextUtils.isEmpty(entry.getValue())) {
+                    setUserAgent(entry.getValue());
+                }
+            }
+            
+            defaultDataSourceFactory = buildDataSourceFactory(context, bandwidthMeter, requestHeaders);
+        }
+        return defaultDataSourceFactory;
     }
 }
